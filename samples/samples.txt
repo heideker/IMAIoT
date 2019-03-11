@@ -1,0 +1,9 @@
+#Getting images
+docker pull mongo:3.6
+docker pull fiware/orion
+
+#Start services
+docker-compose --log-level ERROR -p fiware up -d --remove-orphans
+
+#Stop services
+docker-compose --log-level ERROR -p fiware down -v --remove-orphans

@@ -53,8 +53,8 @@ void ServerMode(int, int, int);
 void logOut(std::string, MonData);
 bool createEntity();
 string getRest(string, string, string);
-bool ckEntity();
 size_t curlCallback(char *, size_t , size_t , void *);
+bool ckEntity();
 bool updateEntity();
 void logMFstatTXTHeader();
 void logMFstatTXT();
@@ -292,7 +292,7 @@ bool ckEntity(){
     ostringstream url;
     string header;
     header = "Content-Type: application/json";
-    url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities/?type=MoniFogNode&id=" << MFstats.IMvar.NodeUUID;
+    url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities/?type=IMAIoT&id=" << MFstats.IMvar.NodeUUID;
     if (MFstats.IMvar.debugMode) cout << "URL:\t" << url.str() << endl;
     if (MFstats.IMvar.debugMode) cout << "Header:\t" << header << endl;
     string retStr = getRest(url.str(), header, "");
