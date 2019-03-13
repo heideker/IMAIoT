@@ -268,7 +268,7 @@ std::string MonData::getJsonProcess(){
     for (auto p: this->Processes) {
         if (cy) s << ",";
         cy = true;
-        s << "{\"type\":\"sistem\", \"pid\":" << p.pid << ", \"name\": \"" << p.Name
+        s << "{\"type\":\"system\", \"pid\":" << p.pid << ", \"name\": \"" << p.Name
             << "\", \"memory\": " << p.DataMem << ", \"cpu\":" << p.cpu << "}";
     }
     for (auto p: this->Dockers) {
