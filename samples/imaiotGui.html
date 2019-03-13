@@ -81,6 +81,26 @@
             cursor:pointer;
             background:#445961	
         }
+
+        #botReflesh {
+            vertical-align:top;
+            display:inline-block;
+            text-align:center;
+            border:1px Solid #FFF;
+            height: 38px;
+            width: 38px;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            box-shadow: 1px 1px 1px #084673;
+            -webkit-box-shadow: 1px 1px 1px #084673;
+            -moz-box-shadow: 1px 1px 1px #084673;
+
+        }
+        #botReflesh:hover{
+            cursor:pointer;
+            background:#445961	
+        }
+
         #connectOff {
             cursor:pointer;
         }
@@ -430,33 +450,33 @@
             return this.replace(/^\s+|\s+$/g, '');
         }
 
-        function getOrionData(hostAdr){
+        function getOrionData(hostAdr) {
             var req = new XMLHttpRequest();
             req.addEventListener("load", refreshScreen, false);
             req.addEventListener("error", connectError, false);
-            var url = 'http://'+hostAdr+'/v2/entities?type=IMAIoT';
+            var url = 'http://' + hostAdr + '/v2/entities?type=IMAIoT';
             req.open("GET", url, true);
             req.send();
-        }            
-        function connectError(evt){
+        }
+        function connectError(evt) {
             alert("Connect Error");
         }
 
-        function refreshScreen(evt){
+        function refreshScreen(evt) {
             var js = JSON.parse(this.responseText);
             clearScreen();
             Selector.$('devicesPannel').innerHTML = devicesList(js);
         }
 
-        function clearScreen(){
+        function clearScreen() {
             //clear device data
 
         }
-    
+
         window.onload = function () {
             //Mask.setOnlyNumbers(Selector.$('tempo'));
         }
-        
+
         function adjConnection() {
             if (Selector.$('Socket').checked) {
                 Selector.$('portNumber').style.display = 'block';
@@ -466,6 +486,8 @@
             }
         }
         function Connect() {
+
+            Selector.$('botReflesh').style.display = "none";
 
             if (Selector.$('host').value.trim() == "") {
                 Selector.$('hostError').innerHTML = "Please inform host name!";
@@ -484,6 +506,7 @@
                 Selector.$('host').style.color = "#FFDD09";
                 Selector.$('host').style.border = "1px solid #FFDD09";
                 Selector.$('hostError').innerHTML = "<div style='color:#7dcc84;  '>Connected!</div>";
+                Selector.$('botReflesh').style.display = "inline-block";
 
             } else {
                 //Disconnected
@@ -499,43 +522,43 @@
             }
             getOrionData(Selector.$('host').value);
         }
-        function devicesList(js){
+        function devicesList(js) {
             var html = '<table width="100%" border="0" cellspacing="5" cellpadding="5">';
-            devices = []; 
+            devices = [];
             for (var dev in js) {
                 //var s = JSON.stringify(js[dev]);
                 //s = s.replace(/\"/g, '\\\"');
-                var lineId = 'linha'+dev;
-                html += '<tr><td onclick="showDeviceInfo(' +  dev + ')">' + js[dev].id + '</td></tr>';
+                var lineId = 'linha' + dev;
+                html += '<tr><td onclick="showDeviceInfo(' + dev + ')">' + js[dev].id + '</td></tr>';
                 devices.push(js[dev]);
             }
             html += '</table>';
             return html;
         }
 
-        function showDeviceInfo(id){
-            var d= new Date(devices[id].LocalTimestamp.value.value * 1000);
-            Selector.$('devTimestamp').innerHTML= devices[id].LocalTimestamp.value.value + 
-                " (" + d.toDateString() + " " + d.toLocaleTimeString() + ")";
-            Selector.$('devSTime').innerHTML= devices[id].SampplingTime.value.value + " seconds";
-            Selector.$('devType').innerHTML= devices[id].MFType.value.value;
-            Selector.$('devCPU').innerHTML= devices[id].CPU.value.value + "%";
-            Selector.$('devTotMem').innerHTML= devices[id].MemorySize.value.value +" bytes";
-            Selector.$('devAvaMem').innerHTML= devices[id].MemoryAvailable.value.value +" bytes";     
-            
+        function showDeviceInfo(id) {
+            var d = new Date(devices[id].LocalTimestamp.value.value * 1000);
+            Selector.$('devTimestamp').innerHTML = devices[id].LocalTimestamp.value.value +
+                    " (" + d.toDateString() + " " + d.toLocaleTimeString() + ")";
+            Selector.$('devSTime').innerHTML = devices[id].SampplingTime.value.value + " seconds";
+            Selector.$('devType').innerHTML = devices[id].MFType.value.value;
+            Selector.$('devCPU').innerHTML = devices[id].CPU.value.value + "%";
+            Selector.$('devTotMem').innerHTML = devices[id].MemorySize.value.value + " bytes";
+            Selector.$('devAvaMem').innerHTML = devices[id].MemoryAvailable.value.value + " bytes";
+
             //network data
-            Selector.$('TCPMaxWindowSize').innerHTML= devices[id].NetworkStats.value.TCPMaxWindowSize
-            Selector.$('TCPtxQueue').innerHTML= devices[id].NetworkStats.value.TCPtxQueue
-            Selector.$('TCPrxQueue').innerHTML= devices[id].NetworkStats.value.TCPrxQueue
-            Selector.$('UDPtxQueue').innerHTML= devices[id].NetworkStats.value.UDPtxQueue
-            Selector.$('UDPrxQueue').innerHTML= devices[id].NetworkStats.value.UDPrxQueue
+            Selector.$('TCPMaxWindowSize').innerHTML = devices[id].NetworkStats.value.TCPMaxWindowSize
+            Selector.$('TCPtxQueue').innerHTML = devices[id].NetworkStats.value.TCPtxQueue
+            Selector.$('TCPrxQueue').innerHTML = devices[id].NetworkStats.value.TCPrxQueue
+            Selector.$('UDPtxQueue').innerHTML = devices[id].NetworkStats.value.UDPtxQueue
+            Selector.$('UDPrxQueue').innerHTML = devices[id].NetworkStats.value.UDPrxQueue
 
             var html = '<span class="title" >Network Adapters</span><br /> <br /><table width="100%" border="0" cellspacing="1" cellpadding="5"><tr>';
-                html += '<th scope="col">Adapter</th><th scope="col">Tx Bytes</th><th scope="col">Tx Packets</th><th scope="col">Tx Errors</th><th scope="col">Rx Bytes</th><th scope="col">Rx Packets</th><th scope="col">Rx Errors</th></tr>';
+            html += '<th scope="col">Adapter</th><th scope="col">Tx Bytes</th><th scope="col">Tx Packets</th><th scope="col">Tx Errors</th><th scope="col">Rx Bytes</th><th scope="col">Rx Packets</th><th scope="col">Rx Errors</th></tr>';
 
             for (var i in devices[id].NetworkAdapters.value) {
                 var net = devices[id].NetworkAdapters.value[i];
-                html += '<tr><td>' + net.name + '</td><td>' + net.txBytes + '</td><td>' + net.txPackets + 
+                html += '<tr><td>' + net.name + '</td><td>' + net.txBytes + '</td><td>' + net.txPackets +
                         '</td><td>' + net.txErrors + '</td><td>' + net.rxBytes + '</td><td>' + net.rxPackets +
                         '</td><td>' + net.rxErrors + '</td></tr>';
             }
@@ -544,11 +567,11 @@
 
             //Processes
             var html = '<span class="title" >Processes</span><br /> <br /><table width="100%" border="0" cellspacing="1" cellpadding="5"><tr>';
-                html += '<th scope="col">Name</th><th scope="col">PID</th><th scope="col">CPU</th><th scope="col">Memory</th><th scope="col">Type</th></tr>';
+            html += '<th scope="col">Name</th><th scope="col">PID</th><th scope="col">CPU</th><th scope="col">Memory</th><th scope="col">Type</th></tr>';
 
             for (var i in devices[id].Process.value) {
                 var pro = devices[id].Process.value[i];
-                html += '<tr><td>' + pro.name + '</td><td>' + pro.pid + '</td><td>' + pro.cpu + 
+                html += '<tr><td>' + pro.name + '</td><td>' + pro.pid + '</td><td>' + pro.cpu +
                         '</td><td>' + pro.memory + '</td><td>' + pro.type + '</td></tr>';
             }
             html += '</table>';
@@ -578,7 +601,7 @@
                 <div id="divHost">
                     <input type="text" id="host" value="localhost:1026" placeholder="Host address" />
                     <div id="botConnect" onclick="Connect()"> <svg version="1.1" id="connectOff"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  width="40px" height="40px" viewBox="0 0 425.201 566.93" enable-background="new 0 0 425.201 566.93"
-                                                                       xml:space="preserve">
+                                                                   xml:space="preserve">
                             <g transform="translate(1 1)">
                                 <g>
                                     <g>
@@ -617,7 +640,31 @@
                         </svg>  </div>
 
 
-                        <input id="btRefresh" type="submit" onclick="getOrionData(Selector.$('host').value)" value="Refresh" />
+                    <div id="botReflesh" style="display: none" onclick="getOrionData(Selector.$('host').value)">
+
+                        <svg id="imgReflesh" style="margin-top:4px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             width="30px" height="30px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+                            <g>
+
+                                <g>
+                                    <path fill="#FFFFFF" d="M24.309,15.108c-0.354,0-0.639,0.286-0.639,0.64c0,4.229-3.441,7.67-7.67,7.67
+                                          c-4.229,0-7.67-3.441-7.67-7.67c0-4.229,3.44-7.67,7.67-7.67v1.917c0,0.236,0.13,0.452,0.337,0.564
+                                          c0.094,0.05,0.199,0.076,0.302,0.076c0.123,0,0.248-0.037,0.354-0.107l3.836-2.557c0.178-0.119,0.285-0.317,0.285-0.531
+                                          c0-0.214-0.107-0.413-0.285-0.532l-3.836-2.557c-0.197-0.131-0.449-0.144-0.655-0.032C16.129,4.431,16,4.647,16,4.883V6.8
+                                          c-4.935,0-8.948,4.014-8.948,8.948c0,4.936,4.014,8.947,8.948,8.947c4.934,0,8.948-4.012,8.948-8.947
+                                          C24.947,15.395,24.66,15.108,24.309,15.108z M17.277,6.077l2.045,1.363l-2.045,1.362V6.077z"/>
+
+                                </g>
+
+                            </g>
+                        </svg>
+
+
+
+                    </div>
+
+
+
                     <br><div id="hostError"></div>
                 </div>
 
@@ -638,7 +685,7 @@
 
                     </div>
 
-                <div class="divwhite" style="width:100%;   overflow:auto; max-height: 500px">
+                    <div class="divwhite" style="width:100%;   overflow:auto; max-height: 500px">
                         <span class="title">Device Stats</span> 
                         <br /> <br />
                         <label style="width:110px" >Local Timestamp: </label><label id="devTimestamp" ></label>
@@ -658,11 +705,11 @@
                         <label>TCP Rx Queue: </label><label style="width:85px"  id="TCPrxQueue" ></label><nb&sp></nb>
                         <label>UDP Tx Queue: </label><label style="width:85px"  id="UDPtxQueue" ></label><nb&sp></nb>
                         <label>UDP Rx Queue: </label><label style="width:85px"  id="UDPrxQueue" ></label>
-                   </div>
+                    </div>
                 </div>
 
                 <div id="divNetAdapters" class="divwhite" style="width:100%;   overflow:auto; max-height: 500px"></div>
-    
+
                 <div id="divProcesses" class="divwhite" style="width:100%;   overflow:auto; max-height: 500px"></div>
 
             </div>
