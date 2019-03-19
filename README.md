@@ -7,12 +7,35 @@ O conceito Internet da Coisas (IoT) é caracterizado pela presença de um númer
 # Requisitos
 
 O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura i386 (32bits).
+Para maior clareza das explicações, todos os comandos serão executados com usuário root, utilizando o comando:
+
+> sudo su
+
+Digite a senha de seu usuário que deve ter poderes de root.
 
 # Obtendo o IMAIoT
 
-## teste
+Caso seu sistema não possua a ferramenta git, instale a mesma com o seguinte comando:
 
-# Configurações
+> apt-get install git
+
+Obtenha a versão atual do IMAIoT:
+
+> git clone https://github.com/heideker/IMAIoT
+
+## Compilação 
+
+Para compilar o IMAIoT são necessários os pacotes de desenvolvimento do Ubuntu. Caso os mesmos não estejam instalados, utilize o seguinte comando:
+
+> apt-get install .....
+
+Entre no diretório onde os fontes foram baixados, no caso IMAIoT e execute o comando make para realizar a compilação do IMAIoT:
+
+> cd IMAIoT
+> make all
+
+
+## Configurações
 
 
 # Execução e Teste
@@ -22,19 +45,29 @@ O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plat
 
 # Operação em modo Context Broker
 
+## Instalando o Orion Context Broker
+
+
+## Configurações
+
+
 Instalação do Docker
 
 Instalação do Docker-compose
 
 Instalação do Orion Context Broker
 
-# Consulta via Orion
+## Consulta via Orion
+
+Para realizar as consultas ao Orion, utilizaremos sua API REST, e para isso será necessário utilizar o curl. Para instalar o curl:
+
+> #> apt-get install curl  
 
 
 
+# Aplicação Web Exemplo
 
-
-
+Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato http://hostOuIP:1026 e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
 
  
 
