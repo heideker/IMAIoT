@@ -63,8 +63,8 @@ void thrSampling();
 void thrOrionPublisher();
 void thrLog();
 void thrTCPServer();
-std::string getJSONstats();
-std::string getTXTstats();
+string getJSONstats();
+string getTXTstats();
 
 MonData MFstats;
 
@@ -124,7 +124,7 @@ void thrTCPServer(){
     while (true){
         client = accept(sock, (struct sockaddr *) &CliAddr, &sin_len);        
         if (MFstats.IMvar.debugMode) cout << "Got connection..." << endl;
-        std:string response = getJSONstats();
+        string response = getJSONstats();
         send(client, response.c_str(), strlen(response.c_str()), 0);
         close(client);
     }

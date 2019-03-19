@@ -119,11 +119,13 @@ O IMAIoT oferece a opção de registro de métricas em um context broker Orion. 
 
 Em seguida, efetue as configurações no arquivo imaiot.conf da seguint forma:
 
->OrionMode = 0
+>OrionMode = 1
 
->OrionHost = http://localhost
+>OrionHost = http://HostNameOrIP
 
 >OrionPort = 1026
+
+*Substitua o "HostNameOrIP" pelo endereço da máquina onde o Orion será executado.
 
 ## Instalando o Orion Context Broker
 
@@ -191,7 +193,7 @@ Para parar a instância do Orion, execute:
 
 ## Consulta via Orion
 
-Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas. Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado:
+Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas:
 ````
 #> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities'
 ````
@@ -203,8 +205,11 @@ Outra consulta pode ser realizada em apenas uma entidade específica, em busca d
 #> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/MemoryAvailable/value'
 ````
 
-# Aplicação Web Exemplo
+*Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
-Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato HostNameOuIP:1026 e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
+#Aplicação Web Exemplo
 
- 
+Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato "HostNameOrIP:1026" e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
+
+ *Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
+
