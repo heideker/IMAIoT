@@ -7,7 +7,7 @@ O conceito Internet da Coisas (IoT) é caracterizado pela presença de um númer
 # Requisitos
 
 O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura de 64bits. 
-* Obs. O uso de arquitetura de 64bits é necessário apenas para executar a instância do Orion, ou seja, os dispositivos monitorados pelo IMAIoT estão limitados a esta arquitetura.
+* Obs. O uso de arquitetura de 64bits é necessário apenas para executar a instância do Orion, ou seja, os dispositivos monitorados pelo IMAIoT NÃO estão limitados a esta arquitetura.
 
 Para maior clareza das explicações, todos os comandos serão executados com usuário root, utilizando o comando:
 
