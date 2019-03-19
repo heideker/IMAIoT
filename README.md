@@ -67,6 +67,7 @@ CPUPathArch = /proc/cpuinfo | [texto] Caminho até o pseudo arquivo arquitetura 
 NetworkStat = 0 | [boleano] Coleta estatísticas de rede quando o seu valor for igual a 1
 NetworkPathStat = /proc/net | [texto] Caminho até o pseudo arquivo rede (de acordo com a versão do Linux do hospedeiro)
 
+Salvo onde explicitamente apontado nenhuma modificação nestas variáveis é necessária para a execução dos exemplos aqui descritos.
 
 # Execução e Teste
 
@@ -83,17 +84,13 @@ Para testar a comunicação via socket TCP, execute o comando telnet:
 > #>telnet localhost 5999
 
 O resultado deve apresentar algo similar a:
-
->Trying ::1...
-
->Trying 127.0.0.1...
-
->Connected to localhost.
-
->Escape character is '^]'.
-
->{"id":"urn:ngsi-ld:999999", "type":"IMAIoT", "MFType":{"type":"Text", "value":"LoRaGateway"}, "Archtecture":{"type":"Text", "value":"Intel R  Core TM  i5-7267U CPU @ 3.10GHz"},"MemorySize":{"type":"Integer", "value": 2111639552},"MemoryAvailable":{"type":"Integer", "value": 1955917824},"LocalTimestamp":{"type":"Integer", "value": 1552960118},"SampplingTime":{"type":"Integer", "value": 5},"CPU":{"type":"Integer", "value": 93},"Storage":[],"NetworkStats":{"TCPrxQueue":0, "TCPtxQueue":0, "TCPMaxWindowSize":10, "UDPrxQueue":0, "UDPtxQueue":0},"NetworkAdapters":[{"name":"enp0s3", "rxBytes":14097, "rxPackets":130, "rxErrors":0, "txBytes":11685, "txPackets":88, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0}],"Process":[{"type":"system", "pid":1130, "name": "bash", "memory": 4464, "cpu":0},{"type":"system", "pid":1178, "name": "bash", "memory": 4388, "cpu":0},{"type":"system", "pid":1194, "name": "bash", "memory": 3536, "cpu":0.1},{"type":"system", "pid":992, "name": "sshd", "memory": 5136, "cpu":0},{"type":"system", "pid":1143, "name": "sshd", "memory": 6056, "cpu":0},{"type":"system", "pid":1177, "name": "sshd", "memory": 2964, "cpu":0}]} Connection closed by foreign host.
-
+'''
+Trying ::1...
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+{"id":"urn:ngsi-ld:999999", "type":"IMAIoT", "MFType":{"type":"Text", "value":"LoRaGateway"}, "Archtecture":{"type":"Text", "value":"Intel R  Core TM  i5-7267U CPU @ 3.10GHz"},"MemorySize":{"type":"Integer", "value": 2111639552},"MemoryAvailable":{"type":"Integer", "value": 1955917824},"LocalTimestamp":{"type":"Integer", "value": 1552960118},"SampplingTime":{"type":"Integer", "value": 5},"CPU":{"type":"Integer", "value": 93},"Storage":[],"NetworkStats":{"TCPrxQueue":0, "TCPtxQueue":0, "TCPMaxWindowSize":10, "UDPrxQueue":0, "UDPtxQueue":0},"NetworkAdapters":[{"name":"enp0s3", "rxBytes":14097, "rxPackets":130, "rxErrors":0, "txBytes":11685, "txPackets":88, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0}],"Process":[{"type":"system", "pid":1130, "name": "bash", "memory": 4464, "cpu":0},{"type":"system", "pid":1178, "name": "bash", "memory": 4388, "cpu":0},{"type":"system", "pid":1194, "name": "bash", "memory": 3536, "cpu":0.1},{"type":"system", "pid":992, "name": "sshd", "memory": 5136, "cpu":0},{"type":"system", "pid":1143, "name": "sshd", "memory": 6056, "cpu":0},{"type":"system", "pid":1177, "name": "sshd", "memory": 2964, "cpu":0}]} Connection closed by foreign host.
+'''
 # Operação em modo Context Broker
 
 O IMAIoT oferece a opção de registro de métricas em um context broker Orion. Para isso, destrua qualquer instância em execução do IMAIoT com o seguinte comando:
