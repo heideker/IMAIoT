@@ -6,10 +6,11 @@ O conceito Internet da Coisas (IoT) é caracterizado pela presença de um númer
 
 # Requisitos
 
-O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura i386 (32bits).
+O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura de 64bits. 
+* Obs. O uso de arquitetura de 64bits é necessário apenas para executar a instância do Orion, ou seja, os dispositivos monitorados pelo IMAIoT estão limitados a esta arquitetura.
 Para maior clareza das explicações, todos os comandos serão executados com usuário root, utilizando o comando:
 
-> sudo su
+> ~>sudo su
 
 Digite a senha de seu usuário que deve ter poderes de root.
 
@@ -17,45 +18,119 @@ Digite a senha de seu usuário que deve ter poderes de root.
 
 Caso seu sistema não possua a ferramenta git, instale a mesma com o seguinte comando:
 
-> apt-get install git
+> #>apt-get install git
 
 Obtenha a versão atual do IMAIoT:
 
-> git clone https://github.com/heideker/IMAIoT
+> #>git clone https://github.com/heideker/IMAIoT
 
 ## Compilação 
 
 Para compilar o IMAIoT são necessários os pacotes de desenvolvimento do Ubuntu. Caso os mesmos não estejam instalados, utilize o seguinte comando:
 
-> apt-get install .....
+> #>apt-get install make gcc libcurl4-openssl-dev g++
 
 Entre no diretório onde os fontes foram baixados, no caso IMAIoT e execute o comando make para realizar a compilação do IMAIoT:
 
-> cd IMAIoT
-> make all
+> #>cd IMAIoT
+> #IMAIoT>make all
 
 
 ## Configurações
+
+O arquivo imaiot.conf contém as variáveis de configuração para o agente. Estas variáveis são descritas na tabela abaixo:
+
+Variável |	Descrição
+---------|-------------
+debugMode = 0 | [boleano] Quando o valor desta variável é igual a 1, o IMAIoT apresenta o valor de todas as suas variáveis em tela além das operações realizadas e resultados obtidos para depuração do agente.
+NodeName = testeIMAIT | [texto] Esta variável configura um nome amigável para o agente.
+NodeUUID = urn:ngsi-ld:999 | [texto] Esta variável configura o UUID utilizado no context broker para identificar unicamente o agente.
+KindOfNode = LoRaGateway | [texto] Identifica o tipo de nó monitorado para simplificar a consulta do mesmo na plataforma de IoT
+SampplingTime = 5 | [inteiro] Intervalo de amostragem das métricas em segundos
+LogMode = 0 | [boleano] Quando o valor da variável for igual a 1 o IMAIoT registra o log local com as métricas
+LogType = txt | [txt | json] Identifica o formato do arquivo de log, se texto separado por ponto e virgula (txt) ou json
+LogFileName = imaitlog.txt | [texto] Nome do arquivo de log. Pode conter o caminho completo até o arquivo destino
+LogIntervall = 5 | [inteiro] Intervalo de registro das métricas no arquivo de log, em segundos
+ServerMode = 1 | [boleano] Ativa o socket TCP para consulta ao IMAIoT quando o valor for igual a 1
+ServerPort = 5999 | [inteiro] Porta utilizada para a abertura do socket TCP
+OrionMode = 0 | [boleano] Ativa a publicação das métricas coletadas no context broker quando o valor for igual a 1
+OrionHost = http://hostname | [texto] URL (hostname ou endereço IP) para o context broker
+OrionPort = 1026 | [inteiro] Número da porta para o context broker
+OrionPublisherTime = 30 | [inteiro] Intervalo entre as publicações de métricas no context broker, em segundos
+DockerStat = 0 | [boleano] Ativa a coleta de estatísticas sobre containers dockers quando o valor for igual a 1
+DockerNames = * | [texto] Lista de nomes de containers, separados por espaço ou o coringa (*) para coletar as estatísticas de todos os containers em execução na máquina
+ProcessNames = bash apache | [texto] Lista de nomes de processos do sistema operacional separados por espaço.
+CPUStat = 1 | [boleano] Coleta estatísticas de uso de CPU quando o valor for igual a 1
+CPUPathStat = /proc/stat | [texto] Caminho até o pseudo arquivo de CPU (de acordo com a versão do Linux do hospedeiro)
+CPUPathArch = /proc/cpuinfo | [texto] Caminho até o pseudo arquivo arquitetura (de acordo com a versão do Linux do hospedeiro)
+NetworkStat = 0 | [boleano] Coleta estatísticas de rede quando o seu valor for igual a 1
+NetworkPathStat = /proc/net | [texto] Caminho até o pseudo arquivo rede (de acordo com a versão do Linux do hospedeiro)
 
 
 # Execução e Teste
 
+Após configurar o arquivo imaiot.conf, basta executar o programa imaiot colocando o mesmo em segundo plano:
 
+> #>./imaiot &
 
+Com as configurações padrão, o IMAIoT irá gerar arquivos de log em formato TXT com o nome imaiotlog.txt. Para acompanhar o registro das métricas no arquivo de log, execute o comando:
+
+> #>tail -f imaiotlog.txt
+
+Para testar a comunicação via socket TCP, execute o comando telnet:
+
+> #>telnet localhost 5999
+
+O resultado deve apresentar algo similar a:
+
+>Trying ::1...
+>Trying 127.0.0.1...
+>Connected to localhost.
+>Escape character is '^]'.
+>{"id":"urn:ngsi-ld:999999", "type":"IMAIoT", "MFType":{"type":"Text", "value":"LoRaGateway"}, "Archtecture":{"type":"Text", "value":"Intel R  Core TM  i5-7267U CPU @ 3.10GHz"},"MemorySize":{"type":"Integer", "value": 2111639552},"MemoryAvailable":{"type":"Integer", "value": 1955917824},"LocalTimestamp":{"type":"Integer", "value": 1552960118},"SampplingTime":{"type":"Integer", "value": 5},"CPU":{"type":"Integer", "value": 93},"Storage":[],"NetworkStats":{"TCPrxQueue":0, "TCPtxQueue":0, "TCPMaxWindowSize":10, "UDPrxQueue":0, "UDPtxQueue":0},"NetworkAdapters":[{"name":"enp0s3", "rxBytes":14097, "rxPackets":130, "rxErrors":0, "txBytes":11685, "txPackets":88, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0}],"Process":[{"type":"system", "pid":1130, "name": "bash", "memory": 4464, "cpu":0},{"type":"system", "pid":1178, "name": "bash", "memory": 4388, "cpu":0},{"type":"system", "pid":1194, "name": "bash", "memory": 3536, "cpu":0.1},{"type":"system", "pid":992, "name": "sshd", "memory": 5136, "cpu":0},{"type":"system", "pid":1143, "name": "sshd", "memory": 6056, "cpu":0},{"type":"system", "pid":1177, "name": "sshd", "memory": 2964, "cpu":0}]} Connection closed by foreign host.
 
 # Operação em modo Context Broker
 
+O IMAIoT oferece a opção de registro de métricas em um context broker Orion. Para isso, destrua qualquer instância em execução do IMAIoT com o seguinte comando:
+
+> #>killall imaiot
+
+Em seguida, efetue as configurações no arquivo imaiot.conf da seguint forma:
+
+>OrionMode = 0
+>OrionHost = http://localhost
+>OrionPort = 1026
+
 ## Instalando o Orion Context Broker
 
+A forma mais simples de executar uma instância do Orion é com o uso de containers Docker.
 
-## Configurações
+### Instalação do Docker
 
+> #>apt-get install apt-transport-https ca-certificates curl software-properties-common
+> #>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+> #>add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
-Instalação do Docker
 
 Instalação do Docker-compose
 
-Instalação do Orion Context Broker
+No diretório .samples/ há um arquivo do docker-compose com todo o esquema necessário para baixar as imagens e executar uma instância do Orion Context Broker. Entre no diretório samples:
+
+> #>cd samples
+
+Obtenha as imagens docker necessárias:
+
+> #>docker pull mongo:3.6
+> #>docker pull fiware/orion
+
+Para lançar uma instância do Orion, execute:
+
+> #>docker-compose --log-level ERROR -p fiware up -d --remove-orphans
+
+Para parar a instância do Orion, execute:
+
+> #>docker-compose --log-level ERROR -p fiware down -v --remove-orphans
+
 
 ## Consulta via Orion
 
@@ -70,13 +145,3 @@ Para realizar as consultas ao Orion, utilizaremos sua API REST, e para isso ser�
 Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato http://hostOuIP:1026 e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
 
  
-
-
-Create by Alexandre Heideker 
-Federal University of ABC - UFABC
-
-IMAIoT is an agent to monitoring a few operational system metrics. It's possible to monitoring system's processes or docker containers and all data may be reported in a log file (in JSON or plain text format) or in an Orion context broaker.
-As a future feature, we spected include an actuator behavior, to make some interventions in SO like reboot or re-start an process, and report it's stats by remote command.
-
-version 0.1 - First release
-version 0.2 - 2019-02-27 - TCP server support and minors fixes
