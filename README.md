@@ -191,7 +191,7 @@ Para parar a instância do Orion, execute:
 
 ## Consulta via Orion
 
-Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas:
+Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas. Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado:
 ````
 #> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities'
 ````
