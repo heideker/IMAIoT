@@ -10,7 +10,9 @@ O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plat
 * Obs. O uso de arquitetura de 64bits é necessário apenas para executar a instância do Orion, ou seja, os dispositivos monitorados pelo IMAIoT estão limitados a esta arquitetura.
 Para maior clareza das explicações, todos os comandos serão executados com usuário root, utilizando o comando:
 
-> ~>sudo su
+```
+~>sudo su
+```
 
 Digite a senha de seu usuário que deve ter poderes de root.
 
@@ -18,23 +20,30 @@ Digite a senha de seu usuário que deve ter poderes de root.
 
 Caso seu sistema não possua a ferramenta git, instale a mesma com o seguinte comando:
 
-> #>apt-get install git
+```
+#>apt-get install git
+```
 
 Obtenha a versão atual do IMAIoT:
 
-> #>git clone https://github.com/heideker/IMAIoT
+```
+#>git clone https://github.com/heideker/IMAIoT
+```
 
 ## Compilação 
 
 Para compilar o IMAIoT são necessários os pacotes de desenvolvimento do Ubuntu. Caso os mesmos não estejam instalados, utilize o seguinte comando:
 
-> #>apt-get install make gcc libcurl4-openssl-dev g++
+````
+#>apt-get install make gcc libcurl4-openssl-dev g++
+````
 
 Entre no diretório onde os fontes foram baixados, no caso IMAIoT e execute o comando make para realizar a compilação do IMAIoT:
 
-> #>cd IMAIoT
-
-> #IMAIoT>make all
+````
+#>cd IMAIoT
+#IMAIoT>make all
+````
 
 
 ## Configurações
@@ -73,15 +82,21 @@ Salvo onde explicitamente apontado nenhuma modificação nestas variáveis é ne
 
 Após configurar o arquivo imaiot.conf, basta executar o programa imaiot colocando o mesmo em segundo plano:
 
-> #>./imaiot &
+````
+#>./imaiot &
+````
 
 Com as configurações padrão, o IMAIoT irá gerar arquivos de log em formato TXT com o nome imaiotlog.txt. Para acompanhar o registro das métricas no arquivo de log, execute o comando:
 
-> #>tail -f imaiotlog.txt
+````
+#>tail -f imaiotlog.txt
+````
 
 Para testar a comunicação via socket TCP, execute o comando telnet:
 
-> #>telnet localhost 5999
+````
+#>telnet localhost 5999
+````
 
 O resultado deve apresentar algo similar a:
 
@@ -97,7 +112,9 @@ Escape character is '^]'.
 
 O IMAIoT oferece a opção de registro de métricas em um context broker Orion. Para isso, destrua qualquer instância em execução do IMAIoT com o seguinte comando:
 
-> #>killall imaiot
+````
+#>killall imaiot
+````
 
 Em seguida, efetue as configurações no arquivo imaiot.conf da seguint forma:
 
@@ -111,11 +128,11 @@ A forma mais simples de executar uma instância do Orion é com o uso de contain
 
 ### Instalação do Docker
 
-> #>apt-get install apt-transport-https ca-certificates curl software-properties-common
-
-> #>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-
-> #>add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+````
+#>apt-get install apt-transport-https ca-certificates curl software-properties-common
+#>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+#>add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+````
 
 
 Instalação do Docker-compose
