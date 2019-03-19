@@ -1,5 +1,43 @@
-# IMAIoT
-IMAIoT - Infrastructure Monitoring Agent for IoT
+# IMAIoT - Infrastructure Monitoring Agent for IoT
+Um Agente Monitor de Infraestruturas para Ambientes de IoT
+
+# Sobre
+O conceito Internet da Coisas (IoT) é caracterizado pela presença de um número muito grande de dispositivos ligados à Internet, o que inclui ambientes urbanos, industriais e de agricultura, em escala mundial. O gerenciamento e monitoramento destes dispositivos, sejam eles virtuais ou físicos, em múltiplas plataformas de hardware e software, representa um grande desafio. Há soluções disponíveis no mercado, porém, específicas para certos domínios e plataformas e, em sua maioria, proprietárias e pouco personalizáveis. Apresentamos o IMAIoT, uma ferramenta para monitoramento de infraestruturas que utiliza protocolos e arquitetura altamente escalável de IoT para disponibilizar suas métricas. A versatilidade da ferramenta permite monitorar desde máquinas reais em um datacenter até dispositivos com como nós de computação em névoa.
+
+# Requisitos
+
+O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura i386 (32bits).
+
+# Obtendo o IMAIoT
+
+## teste
+
+# Configurações
+
+
+# Execução e Teste
+
+
+
+
+# Operação em modo Context Broker
+
+Instalação do Docker
+
+Instalação do Docker-compose
+
+Instalação do Orion Context Broker
+
+# Consulta via Orion
+
+
+
+
+
+
+
+ 
+
 
 Create by Alexandre Heideker 
 Federal University of ABC - UFABC
