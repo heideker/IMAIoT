@@ -8,10 +8,11 @@ O conceito Internet da Coisas (IoT) é caracterizado pela presença de um númer
 
 O IMAIoT foi desenvolvido em C++ com o intúito de ser uma ferramenta multi-plataforma. Apesar deste manual utilizar a distribuição Ubuntu 16.04, qualquer distribuição Linux poderá ser utilizada fazendo os ajustes necessários no arquivo automake (para o processo de compilação) e no caminho para o pseudo file system, que pode ser realizado diretamente no arquivo de configuração (imaiot.conf). A instalação pressupõe a instalação mínima do Ubuntu 16.04 Server. Como este manual considera um sistema mínimo, o procedimento será realizado em uma máquina com 2Gbytes de RAM, 5Gbytes de HD e arquitetura de 64bits. 
 * Obs. O uso de arquitetura de 64bits é necessário apenas para executar a instância do Orion, ou seja, os dispositivos monitorados pelo IMAIoT estão limitados a esta arquitetura.
+
 Para maior clareza das explicações, todos os comandos serão executados com usuário root, utilizando o comando:
 
 ```
-~>sudo su
+~> sudo su
 ```
 
 Digite a senha de seu usuário que deve ter poderes de root.
@@ -21,12 +22,12 @@ Digite a senha de seu usuário que deve ter poderes de root.
 Caso seu sistema não possua a ferramenta git, instale a mesma com o seguinte comando:
 
 ```
-#>apt-get install git
+#> apt-get install git
 ```
 
 Obtenha a versão atual do IMAIoT:
 
-```
+``` 
 #>git clone https://github.com/heideker/IMAIoT
 ```
 
@@ -35,14 +36,14 @@ Obtenha a versão atual do IMAIoT:
 Para compilar o IMAIoT são necessários os pacotes de desenvolvimento do Ubuntu. Caso os mesmos não estejam instalados, utilize o seguinte comando:
 
 ````
-#>apt-get install make gcc libcurl4-openssl-dev g++
+#> apt-get install make gcc libcurl4-openssl-dev g++
 ````
 
 Entre no diretório onde os fontes foram baixados, no caso IMAIoT e execute o comando make para realizar a compilação do IMAIoT:
 
 ````
-#>cd IMAIoT
-#IMAIoT>make all
+#> cd IMAIoT
+#IMAIoT> make all
 ````
 
 
@@ -83,19 +84,19 @@ Salvo onde explicitamente apontado nenhuma modificação nestas variáveis é ne
 Após configurar o arquivo imaiot.conf, basta executar o programa imaiot colocando o mesmo em segundo plano:
 
 ````
-#>./imaiot &
+#> ./imaiot &
 ````
 
 Com as configurações padrão, o IMAIoT irá gerar arquivos de log em formato TXT com o nome imaiotlog.txt. Para acompanhar o registro das métricas no arquivo de log, execute o comando:
 
 ````
-#>tail -f imaiotlog.txt
+#> tail -f imaiotlog.txt
 ````
 
 Para testar a comunicação via socket TCP, execute o comando telnet:
 
 ````
-#>telnet localhost 5999
+#> telnet localhost 5999
 ````
 
 O resultado deve apresentar algo similar a:
@@ -113,13 +114,15 @@ Escape character is '^]'.
 O IMAIoT oferece a opção de registro de métricas em um context broker Orion. Para isso, destrua qualquer instância em execução do IMAIoT com o seguinte comando:
 
 ````
-#>killall imaiot
+#> killall imaiot
 ````
 
 Em seguida, efetue as configurações no arquivo imaiot.conf da seguint forma:
 
 >OrionMode = 0
+
 >OrionHost = http://localhost
+
 >OrionPort = 1026
 
 ## Instalando o Orion Context Broker
@@ -128,44 +131,80 @@ A forma mais simples de executar uma instância do Orion é com o uso de contain
 
 ### Instalação do Docker
 
-````
-#>apt-get install apt-transport-https ca-certificates curl software-properties-common
-#>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-#>add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-````
+Adicione os repositórios do Docker ao APT:
 
+````
+#> apt-get install apt-transport-https ca-certificates curl software-properties-common
+#> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+#> add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+````
+Em seguida faça a atualização dos repositorios e instale o Docker:
+
+````
+#> apt-get update
+#> apt-get install docker-ce
+````
+Para verificar se a instalação do Docker foi finalizada com sucesso, execute seu "hello world":
+
+````
+#> docker run hello-world
+````
 
 Instalação do Docker-compose
 
+O Docker Compose é um aplicativo em python utilizado para automação de tarefas no docker. Para instalar o docker-compose primeiro instale o suporte ao python-pip:
+
+````
+#> apt-get install python-pip
+````
+
+E, finalmente, utilizando o pip, faça a instalação do docker-compose:
+
+````
+#> pip install docker-compose
+````
+
 No diretório .samples/ há um arquivo do docker-compose com todo o esquema necessário para baixar as imagens e executar uma instância do Orion Context Broker. Entre no diretório samples:
 
-> #>cd samples
+````
+#> cd samples
+````
 
-Obtenha as imagens docker necessárias:
+Obtenha as imagens docker necessárias (o Orion utiliza o banco de dados No-SQL MongoDB para persistência):
 
-> #>docker pull mongo:3.6
-
-> #>docker pull fiware/orion
+```
+#> docker pull mongo:3.6
+#> docker pull fiware/orion
+````
 
 Para lançar uma instância do Orion, execute:
 
-> #>docker-compose --log-level ERROR -p fiware up -d --remove-orphans
+````
+#> docker-compose --log-level ERROR -p fiware up -d --remove-orphans
+````
 
 Para parar a instância do Orion, execute:
 
-> #>docker-compose --log-level ERROR -p fiware down -v --remove-orphans
-
+````
+#> docker-compose --log-level ERROR -p fiware down -v --remove-orphans
+````
 
 ## Consulta via Orion
 
-Para realizar as consultas ao Orion, utilizaremos sua API REST, e para isso será necessário utilizar o curl. Para instalar o curl:
+Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas:
+````
+#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities'
+````
+Outra consulta pode ser realizada em apenas uma entidade específica, em busca do valor de um atributo específico:
 
-> #> apt-get install curl  
+````
+#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/Archtecture/value'
 
-
+#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/MemoryAvailable/value'
+````
 
 # Aplicação Web Exemplo
 
-Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato http://hostOuIP:1026 e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
+Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato HostNameOuIP:1026 e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
 
  
