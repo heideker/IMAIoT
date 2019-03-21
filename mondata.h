@@ -9,6 +9,16 @@
 ***********************************************************/
 
 using namespace std;
+#define ST_USER 0
+#define ST_NICE 1
+#define ST_SYSTEM 2
+#define ST_IDLE 3
+#define ST_IOWAIT 4
+#define ST_IRQ 5
+#define ST_SOFTIRQ 6
+#define ST_STEAL 7
+#define ST_GUEST 8
+#define ST_GUEST_NICE 9
 
 class MonData{
     private:
@@ -49,26 +59,31 @@ void MonData::Refresh(){
     File.open (this->IMvar.CPUPathStat);
     if (File.is_open()) {
         std::string cpuId;
-        File >> cpuId >> this->cpuStats[0]
-                >> this->cpuStats[1]
-                >> this->cpuStats[2]
-                >> this->cpuStats[3]
-                >> this->cpuStats[4]
-                >> this->cpuStats[5]
-                >> this->cpuStats[6]
-                >> this->cpuStats[7]
-                >> this->cpuStats[8]
-                >> this->cpuStats[9];
-        long cpuSumTime, cpuSumTimeOld, cpuDelta, cpuUsed, cpuIdle;
-        cpuIdle = this->cpuStats[3] - this->cpuOldStats[3];
-        for (int i=0; i<10; i++) {
-            cpuSumTime += this->cpuStats[i];
-            cpuSumTimeOld += this->cpuOldStats[i];
-            this->cpuOldStats[i] = this->cpuStats[i];
-        }
-        cpuDelta = cpuSumTime - cpuSumTimeOld;
-        cpuUsed = cpuDelta - cpuIdle;
-        this->cpuLevel = (int) 100 *  cpuUsed / cpuDelta; 
+        File >> cpuId >> this->cpuStats[ST_USER]
+                >> this->cpuStats[ST_NICE]
+                >> this->cpuStats[ST_SYSTEM]
+                >> this->cpuStats[ST_IDLE]
+                >> this->cpuStats[ST_IOWAIT]
+                >> this->cpuStats[ST_IRQ]
+                >> this->cpuStats[ST_SOFTIRQ]
+                >> this->cpuStats[ST_STEAL]
+                >> this->cpuStats[ST_GUEST]
+                >> this->cpuStats[ST_GUEST_NICE];
+        long cpuOldIdle, cpuIdle, cpuOldAct, cpuAct, totalOld, total, totalDelta, idleDelta;
+
+        cpuOldIdle = this->cpuOldStats[ST_IDLE] + this->cpuOldStats[ST_IOWAIT];
+        cpuIdle = this->cpuStats[ST_IDLE] + this->cpuStats[ST_IOWAIT];
+
+        cpuOldAct = this->cpuOldStats[ST_USER] + this->cpuOldStats[ST_NICE] + this->cpuOldStats[ST_SYSTEM] + 
+                    this->cpuOldStats[ST_IRQ] + this->cpuOldStats[ST_SOFTIRQ] + this->cpuOldStats[ST_STEAL];
+        cpuAct = this->cpuStats[ST_USER] + this->cpuStats[ST_NICE] + this->cpuStats[ST_SYSTEM] + 
+                    this->cpuStats[ST_IRQ] + this->cpuStats[ST_SOFTIRQ] + this->cpuStats[ST_STEAL];
+        totalOld = cpuOldIdle + cpuOldAct;
+        total = cpuIdle + cpuAct;
+        totalDelta = total - totalOld;
+        idleDelta = cpuIdle - cpuOldIdle;
+
+        this->cpuLevel = (int) 100 *  ((totalDelta - IdleDelta) / totalDelta); 
         if (this->IMvar.debugMode) cout << cpuId << "  " << this->cpuLevel << endl;
         File.close();
     }

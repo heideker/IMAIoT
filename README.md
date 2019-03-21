@@ -209,7 +209,7 @@ Outra consulta pode ser realizada em apenas uma entidade específica, em busca d
 
 # Aplicação Web Exemplo
 
-Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato "HostNameOrIP:1026" e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
+Para utilizar a aplicação web exemplo, basta abrir o arquivo samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato "HostNameOrIP:1026" e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
 
  *Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
