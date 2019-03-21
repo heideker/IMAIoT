@@ -213,3 +213,9 @@ Para utilizar a aplicação web exemplo, basta abrir o arquivo ./samples/imaiotG
 
  *Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
+
+#Agradecimentos
+* Programa de Doutorado em Engenharia da Informação da UFABC
+* Projeto SWAMP
+
+O video com estas instruções está disponível em: https://youtu.be/IPe_KVRKbtE
