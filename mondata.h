@@ -83,7 +83,7 @@ void MonData::Refresh(){
         totalDelta = total - totalOld;
         idleDelta = cpuIdle - cpuOldIdle;
 
-        this->cpuLevel = (int) 100 *  ((totalDelta - IdleDelta) / totalDelta); 
+        this->cpuLevel = (int) 100 *  ((totalDelta - idleDelta) / totalDelta); 
         if (this->IMvar.debugMode) cout << cpuId << "  " << this->cpuLevel << endl;
         File.close();
     }
