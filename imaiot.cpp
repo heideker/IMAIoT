@@ -65,6 +65,7 @@ void thrLog();
 void thrTCPServer();
 string getJSONstats();
 string getTXTstats();
+string getRestFiware(string , curl_slist *, string);
 
 MonData MFstats;
 
@@ -164,7 +165,7 @@ std::string getJSONstats(){
     ostringstream json;
     SEM_WAIT
     json << "{\"id\":\"" << MFstats.IMvar.NodeUUID << "\", \"type\":\"IMAIoT\", \"MFType\":{\"type\":\"Text\", \"value\":\""
-            << MFstats.IMvar.KindOfNode << "\"}, \"Archtecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
+            << MFstats.IMvar.KindOfNode << "\"}, \"Architecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
             << "\"},\"MemorySize\":{\"type\":\"Integer\", \"value\": " << MFstats.MemorySize 
             << "},\"MemoryAvailable\":{\"type\":\"Integer\", \"value\": " << MFstats.MemoryAvailable
             << "},\"LocalTimestamp\":{\"type\":\"Integer\", \"value\": " << MFstats.Timestamp
@@ -190,10 +191,10 @@ void logMFstatJSON(){
 void logMFstatTXTHeader(){
     ofstream File;
     //Header's file:
-    // NodeUUID;Timestamp;Archtecture;CPUlevel;MemorySize;MemoryFree;TCPtxQueue;TCPrxQueue; ->
+    // NodeUUID;Timestamp;Architecture;CPUlevel;MemorySize;MemoryFree;TCPtxQueue;TCPrxQueue; ->
     // -> UDPtxQueue;UDPrxQueue;TCPMaxWindow;[Processes/Dockers(Kind;Name;CPU;Memory)]
     File.open (MFstats.IMvar.LogFileName.c_str(), std::ofstream::out);
-    File << "NodeUUID;Timestamp;Archtecture;CPUlevel;MemorySize;MemoryFree;TCPtxQueue;TCPrxQueue;" <<
+    File << "NodeUUID;Timestamp;Architecture;CPUlevel;MemorySize;MemoryFree;TCPtxQueue;TCPrxQueue;" <<
             "UDPtxQueue;UDPrxQueue;TCPMaxWindow;[Processes/Dockers(Kind;Name;CPU;Memory)]" << endl;
     File.close();
     return;
@@ -233,7 +234,7 @@ bool updateEntity(){
     ostringstream json;
     SEM_WAIT
     json << "{\"MFType\":{\"type\":\"Text\", \"value\":\""
-            << MFstats.IMvar.KindOfNode << "\"}, \"Archtecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
+            << MFstats.IMvar.KindOfNode << "\"}, \"Architecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
             << "\"},\"MemorySize\":{\"type\":\"Integer\", \"value\": " << MFstats.MemorySize 
             << "},\"MemoryAvailable\":{\"type\":\"Integer\", \"value\": " << MFstats.MemoryAvailable
             << "},\"LocalTimestamp\":{\"type\":\"Integer\", \"value\": " << MFstats.Timestamp
@@ -247,13 +248,16 @@ bool updateEntity(){
 
     SEM_POST
     ostringstream url;
-    string header;
-    header = "Content-Type: application/json";
+    
     url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities/" << MFstats.IMvar.NodeUUID << "/attrs?options=keyValues";
     if (MFstats.IMvar.debugMode) cout << "URL:\t" << url.str() << endl;
-    if (MFstats.IMvar.debugMode) cout << "Header:\t" << header << endl;
     if (MFstats.IMvar.debugMode) cout << "JSON:\t" << json.str() << endl;
-    string retStr = getRest(url.str(), header, json.str());
+    struct curl_slist *chunk = NULL;
+    chunk = curl_slist_append(chunk, "Content-Type: application/json");
+    chunk = curl_slist_append(chunk, "fiware-service: openiot");
+    chunk = curl_slist_append(chunk, "fiware-servicepath: /");
+
+    string retStr = getRestFiware(url.str(), chunk, json.str());
     if (retStr.find("{\"error\":",0)) 
         return false;
     return true;
@@ -264,7 +268,7 @@ bool createEntity(){
     ostringstream json;
     SEM_WAIT
     json << "{\"id\":\"" << MFstats.IMvar.NodeUUID << "\", \"type\":\"IMAIoT\", \"MFType\":{\"type\":\"Text\", \"value\":\""
-            << MFstats.IMvar.KindOfNode << "\"}, \"Archtecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
+            << MFstats.IMvar.KindOfNode << "\"}, \"Architecture\":{\"type\":\"Text\", \"value\":\"" << MFstats.arch 
             << "\"},\"MemorySize\":{\"type\":\"Integer\", \"value\": " << MFstats.MemorySize 
             << "},\"MemoryAvailable\":{\"type\":\"Integer\", \"value\": " << MFstats.MemoryAvailable
             << "},\"LocalTimestamp\":{\"type\":\"Integer\", \"value\": " << MFstats.Timestamp
@@ -277,25 +281,30 @@ bool createEntity(){
             << "}";
     SEM_POST
     ostringstream url;
-    string header;
-    header = "Content-Type: application/json";
+
     url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities?options=keyValues";
     if (MFstats.IMvar.debugMode) cout << "URL:\t" << url.str() << endl;
-    if (MFstats.IMvar.debugMode) cout << "Header:\t" << header << endl;
     if (MFstats.IMvar.debugMode) cout << "JSON:\t" << json.str() << endl;
-    string retStr = getRest(url.str(), header, json.str());
+    struct curl_slist *chunk = NULL;
+    chunk = curl_slist_append(chunk, "Content-Type: application/json");
+    chunk = curl_slist_append(chunk, "fiware-service: openiot");
+    chunk = curl_slist_append(chunk, "fiware-servicepath: /");
+
+    string retStr = getRestFiware(url.str(), chunk, json.str());
     if (retStr.find("{\"error\":",0)) 
         return false;
     return true;
 }
 bool ckEntity(){
     ostringstream url;
-    string header;
-    header = "Content-Type: application/json";
-    url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities/?type=IMAIoT&id=" << MFstats.IMvar.NodeUUID;
+
+    url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities?type=IMAIoT&id=" << MFstats.IMvar.NodeUUID;
     if (MFstats.IMvar.debugMode) cout << "URL:\t" << url.str() << endl;
-    if (MFstats.IMvar.debugMode) cout << "Header:\t" << header << endl;
-    string retStr = getRest(url.str(), header, "");
+    struct curl_slist *chunk = NULL;
+    chunk = curl_slist_append(chunk, "fiware-service: openiot");
+    chunk = curl_slist_append(chunk, "fiware-servicepath: /");
+
+    string retStr = getRestFiware(url.str(), chunk, "");
     if (retStr != "[]") 
         return true;
     return false;
@@ -318,6 +327,40 @@ string getRest(string url, string header, string data) {
             struct curl_slist *chunk = NULL;
             chunk = curl_slist_append(chunk, header.c_str());
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+            curl_easy_setopt(curl, CURLOPT_POST, 1L);
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);
+        }
+        string Buffer;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &Buffer);
+
+        res = curl_easy_perform(curl);
+        if(res != CURLE_OK) {
+            curl_easy_cleanup(curl);
+            curl_global_cleanup();
+            return "";
+        }
+        curl_easy_cleanup(curl);
+        curl_global_cleanup();
+        return Buffer;
+    }
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
+    return "";
+}
+
+
+string getRestFiware(string url, curl_slist *chunk, string data) {
+    CURL *curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        if (MFstats.IMvar.debugMode) curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+        if (data != "") {
             curl_easy_setopt(curl, CURLOPT_POST, 1L);
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
             curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);

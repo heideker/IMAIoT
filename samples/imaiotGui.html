@@ -456,6 +456,8 @@
             req.addEventListener("error", connectError, false);
             var url = 'http://' + hostAdr + '/v2/entities?type=IMAIoT';
             req.open("GET", url, true);
+            req.setRequestHeader("fiware-service", "openiot");
+            req.setRequestHeader("fiware-servicepath", "/");
             req.send();
         }
         function connectError(evt) {

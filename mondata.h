@@ -9,16 +9,16 @@
 ***********************************************************/
 
 using namespace std;
-#define ST_USER 0
-#define ST_NICE 1
-#define ST_SYSTEM 2
-#define ST_IDLE 3
-#define ST_IOWAIT 4
-#define ST_IRQ 5
-#define ST_SOFTIRQ 6
-#define ST_STEAL 7
-#define ST_GUEST 8
-#define ST_GUEST_NICE 9
+#define STAT_USER 0
+#define STAT_NICE 1
+#define STAT_SYSTEM 2
+#define STAT_IDLE 3
+#define STAT_IOWAIT 4
+#define STAT_IRQ 5
+#define STAT_SOFTIRQ 6
+#define STAT_STEAL 7
+#define STAT_GUEST 8
+#define STAT_GUEST_NICE 9
 
 class MonData{
     private:
@@ -59,25 +59,25 @@ void MonData::Refresh(){
     File.open (this->IMvar.CPUPathStat);
     if (File.is_open()) {
         std::string cpuId;
-        File >> cpuId >> this->cpuStats[ST_USER]
-                >> this->cpuStats[ST_NICE]
-                >> this->cpuStats[ST_SYSTEM]
-                >> this->cpuStats[ST_IDLE]
-                >> this->cpuStats[ST_IOWAIT]
-                >> this->cpuStats[ST_IRQ]
-                >> this->cpuStats[ST_SOFTIRQ]
-                >> this->cpuStats[ST_STEAL]
-                >> this->cpuStats[ST_GUEST]
-                >> this->cpuStats[ST_GUEST_NICE];
+        File >> cpuId >> this->cpuStats[STAT_USER]
+                >> this->cpuStats[STAT_NICE]
+                >> this->cpuStats[STAT_SYSTEM]
+                >> this->cpuStats[STAT_IDLE]
+                >> this->cpuStats[STAT_IOWAIT]
+                >> this->cpuStats[STAT_IRQ]
+                >> this->cpuStats[STAT_SOFTIRQ]
+                >> this->cpuStats[STAT_STEAL]
+                >> this->cpuStats[STAT_GUEST]
+                >> this->cpuStats[STAT_GUEST_NICE];
         long cpuOldIdle, cpuIdle, cpuOldAct, cpuAct, totalOld, total, totalDelta, idleDelta;
 
-        cpuOldIdle = this->cpuOldStats[ST_IDLE] + this->cpuOldStats[ST_IOWAIT];
-        cpuIdle = this->cpuStats[ST_IDLE] + this->cpuStats[ST_IOWAIT];
+        cpuOldIdle = this->cpuOldStats[STAT_IDLE] + this->cpuOldStats[STAT_IOWAIT];
+        cpuIdle = this->cpuStats[STAT_IDLE] + this->cpuStats[STAT_IOWAIT];
 
-        cpuOldAct = this->cpuOldStats[ST_USER] + this->cpuOldStats[ST_NICE] + this->cpuOldStats[ST_SYSTEM] + 
-                    this->cpuOldStats[ST_IRQ] + this->cpuOldStats[ST_SOFTIRQ] + this->cpuOldStats[ST_STEAL];
-        cpuAct = this->cpuStats[ST_USER] + this->cpuStats[ST_NICE] + this->cpuStats[ST_SYSTEM] + 
-                    this->cpuStats[ST_IRQ] + this->cpuStats[ST_SOFTIRQ] + this->cpuStats[ST_STEAL];
+        cpuOldAct = this->cpuOldStats[STAT_USER] + this->cpuOldStats[STAT_NICE] + this->cpuOldStats[STAT_SYSTEM] + 
+                    this->cpuOldStats[STAT_IRQ] + this->cpuOldStats[STAT_SOFTIRQ] + this->cpuOldStats[STAT_STEAL];
+        cpuAct = this->cpuStats[STAT_USER] + this->cpuStats[STAT_NICE] + this->cpuStats[STAT_SYSTEM] + 
+                    this->cpuStats[STAT_IRQ] + this->cpuStats[STAT_SOFTIRQ] + this->cpuStats[STAT_STEAL];
         totalOld = cpuOldIdle + cpuOldAct;
         total = cpuIdle + cpuAct;
         totalDelta = total - totalOld;

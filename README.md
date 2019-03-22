@@ -60,7 +60,7 @@ KindOfNode = LoRaGateway | [texto] Identifica o tipo de nó monitorado para simp
 SampplingTime = 5 | [inteiro] Intervalo de amostragem das métricas em segundos
 LogMode = 0 | [boleano] Quando o valor da variável for igual a 1 o IMAIoT registra o log local com as métricas
 LogType = txt | [txt | json] Identifica o formato do arquivo de log, se texto separado por ponto e virgula (txt) ou json
-LogFileName = imaitlog.txt | [texto] Nome do arquivo de log. Pode conter o caminho completo até o arquivo destino
+LogFileName = imaiot.log | [texto] Nome do arquivo de log. Pode conter o caminho completo até o arquivo destino
 LogIntervall = 5 | [inteiro] Intervalo de registro das métricas no arquivo de log, em segundos
 ServerMode = 1 | [boleano] Ativa o socket TCP para consulta ao IMAIoT quando o valor for igual a 1
 ServerPort = 5999 | [inteiro] Porta utilizada para a abertura do socket TCP
@@ -106,7 +106,7 @@ Trying ::1...
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-{"id":"urn:ngsi-ld:999999", "type":"IMAIoT", "MFType":{"type":"Text", "value":"LoRaGateway"}, "Archtecture":{"type":"Text", "value":"Intel R  Core TM  i5-7267U CPU @ 3.10GHz"},"MemorySize":{"type":"Integer", "value": 2111639552},"MemoryAvailable":{"type":"Integer", "value": 1955917824},"LocalTimestamp":{"type":"Integer", "value": 1552960118},"SampplingTime":{"type":"Integer", "value": 5},"CPU":{"type":"Integer", "value": 93},"Storage":[],"NetworkStats":{"TCPrxQueue":0, "TCPtxQueue":0, "TCPMaxWindowSize":10, "UDPrxQueue":0, "UDPtxQueue":0},"NetworkAdapters":[{"name":"enp0s3", "rxBytes":14097, "rxPackets":130, "rxErrors":0, "txBytes":11685, "txPackets":88, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0}],"Process":[{"type":"system", "pid":1130, "name": "bash", "memory": 4464, "cpu":0},{"type":"system", "pid":1178, "name": "bash", "memory": 4388, "cpu":0},{"type":"system", "pid":1194, "name": "bash", "memory": 3536, "cpu":0.1},{"type":"system", "pid":992, "name": "sshd", "memory": 5136, "cpu":0},{"type":"system", "pid":1143, "name": "sshd", "memory": 6056, "cpu":0},{"type":"system", "pid":1177, "name": "sshd", "memory": 2964, "cpu":0}]} Connection closed by foreign host.
+{"id":"urn:ngsi-ld:999999", "type":"IMAIoT", "MFType":{"type":"Text", "value":"LoRaGateway"}, "Architecture":{"type":"Text", "value":"Intel R  Core TM  i5-7267U CPU @ 3.10GHz"},"MemorySize":{"type":"Integer", "value": 2111639552},"MemoryAvailable":{"type":"Integer", "value": 1955917824},"LocalTimestamp":{"type":"Integer", "value": 1552960118},"SampplingTime":{"type":"Integer", "value": 5},"CPU":{"type":"Integer", "value": 93},"Storage":[],"NetworkStats":{"TCPrxQueue":0, "TCPtxQueue":0, "TCPMaxWindowSize":10, "UDPrxQueue":0, "UDPtxQueue":0},"NetworkAdapters":[{"name":"enp0s3", "rxBytes":14097, "rxPackets":130, "rxErrors":0, "txBytes":11685, "txPackets":88, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0},{"name":"lo", "rxBytes":13296, "rxPackets":176, "rxErrors":0, "txBytes":13296, "txPackets":176, "txErrors":0}],"Process":[{"type":"system", "pid":1130, "name": "bash", "memory": 4464, "cpu":0},{"type":"system", "pid":1178, "name": "bash", "memory": 4388, "cpu":0},{"type":"system", "pid":1194, "name": "bash", "memory": 3536, "cpu":0.1},{"type":"system", "pid":992, "name": "sshd", "memory": 5136, "cpu":0},{"type":"system", "pid":1143, "name": "sshd", "memory": 6056, "cpu":0},{"type":"system", "pid":1177, "name": "sshd", "memory": 2964, "cpu":0}]} Connection closed by foreign host.
 ```
 
 # Operação em modo Context Broker
@@ -171,19 +171,12 @@ No diretório .samples/ há um arquivo do docker-compose com todo o esquema nece
 ````
 #> cd samples
 ````
-
-Obtenha as imagens docker necessárias (o Orion utiliza o banco de dados No-SQL MongoDB para persistência):
-
-```
-#> docker pull mongo:3.6
-#> docker pull fiware/orion
-````
-
 Para lançar uma instância do Orion, execute:
 
 ````
 #> docker-compose --log-level ERROR -p fiware up -d --remove-orphans
 ````
+* Na primeira execução do comando anterior as imagens do Docker necessárias serão baixadas.
 
 Para parar a instância do Orion, execute:
 
@@ -195,17 +188,17 @@ Para parar a instância do Orion, execute:
 
 Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples consulta pode ser realizada com o comando abaixo, onde todas as entidades ligadas ao context broker serão listadas:
 ````
-#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities'
+#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /' --url 'http://HostNameOrIP:1026/v2/entities'
 ````
 Outra consulta pode ser realizada em apenas uma entidade específica, em busca do valor de um atributo específico:
 
 ````
-#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/Archtecture/value'
+#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /' --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/Architecture/value'
 
-#> curl -X GET --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/MemoryAvailable/value'
+#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /'--url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/MemoryAvailable/value'
 ````
 
-*Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
+* Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
 # Aplicação Web Exemplo
 
