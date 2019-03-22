@@ -199,4 +199,4 @@ Para utilizar a aplicação web exemplo, basta abrir o arquivo imaiotGui.html em
 * Programa de Doutorado em Engenharia da Informação da UFABC
 * Projeto SWAMP
 
-O video com estas instruções está disponível em: https://youtu.be/IPe_KVRKbtE
+O video com estas instruções está disponível em: https://youtu.be/0M_0YtABibc
