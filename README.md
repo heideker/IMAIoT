@@ -87,10 +87,10 @@ Após configurar o arquivo imaiot.conf, basta executar o programa imaiot colocan
 #> ./imaiot &
 ````
 
-Com as configurações padrão, o IMAIoT irá gerar arquivos de log em formato TXT com o nome imaiotlog.txt. Para acompanhar o registro das métricas no arquivo de log, execute o comando:
+Com as configurações padrão, o IMAIoT irá gerar arquivos de log em formato TXT com o nome imaiot.log. Para acompanhar o registro das métricas no arquivo de log, execute o comando:
 
 ````
-#> tail -f imaiotlog.txt
+#> tail -f imaiot.log
 ````
 
 Para testar a comunicação via socket TCP, execute o comando telnet:
