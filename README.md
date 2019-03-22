@@ -124,13 +124,6 @@ Em seguida, efetue as configurações no arquivo imaiot.conf da seguint forma:
 >OrionHost = http://HostNameOrIP
 
 >OrionPort = 1026
-
-*Substitua o "HostNameOrIP" pelo endereço da máquina onde o Orion será executado.
-
-## Instalando o Orion Context Broker
-
-A forma mais simples de executar uma instância do Orion é com o uso de containers Docker.
-
 ### Instalação do Docker
 
 Adicione os repositórios do Docker ao APT:
@@ -166,11 +159,6 @@ E, finalmente, utilizando o pip, faça a instalação do docker-compose:
 #> pip install docker-compose
 ````
 
-No diretório .samples/ há um arquivo do docker-compose com todo o esquema necessário para baixar as imagens e executar uma instância do Orion Context Broker. Entre no diretório samples:
-
-````
-#> cd samples
-````
 Para lançar uma instância do Orion, execute:
 
 ````
@@ -193,16 +181,16 @@ Para realizar as consultas ao Orion, utilizaremos sua API REST. Uma simples cons
 Outra consulta pode ser realizada em apenas uma entidade específica, em busca do valor de um atributo específico:
 
 ````
-#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /' --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/Architecture/value'
+#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /' --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:555/attrs/Architecture/value'
 
-#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /'--url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:999999/attrs/MemoryAvailable/value'
+#> curl -X GET -H 'fiware-service: openiot' -H 'fiware-servicepath: /' --url 'http://HostNameOrIP:1026/v2/entities/urn:ngsi-ld:555/attrs/MemoryAvailable/value'
 ````
 
 * Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
 # Aplicação Web Exemplo
 
-Para utilizar a aplicação web exemplo, basta abrir o arquivo samples/imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato "HostNameOrIP:1026" e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
+Para utilizar a aplicação web exemplo, basta abrir o arquivo imaiotGui.html em qualquer navegador, indicar o endereço do host onde o Orion está sendo executado utililando a URL no formato "HostNameOrIP:1026" e clicar no botão de conexão. Selecione um dos dispositivos monitorados que aparece no primeiro bloco e visualize as métricas publicadas pelo mesmo.
 
  *Substitua o termo "HostNameOrIP" pelo endereço da máquina onde o Orion está sendo executado.
 
