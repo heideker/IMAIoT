@@ -213,18 +213,20 @@ void MonData::Refresh(){
     if (this->IMvar.DockerStat) {
         this->Dockers.clear();
         stringOut = run("docker stats --all --no-stream --format \"{{.Name}};{{.CPUPerc}};{{.MemUsage}}\"");
+        if (this->IMvar.debugMode) cout << "Docker Stats: " << stringOut << endl;
         if (stringOut.size()>0) {
             replaceAll(stringOut, " / ", ";");
-            replaceAll(stringOut, "MiB", "E03");
-            replaceAll(stringOut, "GiB", "E06");
+            replaceAll(stringOut, "MiB", "E06");
+            replaceAll(stringOut, "GiB", "E09");
             replaceAll(stringOut, "B", "");
             replaceAll(stringOut, "%", "");
             replaceAll(stringOut, ";", " ");
             std::stringstream ss(stringOut);
-            int n;
+            float dm, n;
             ps.pid=0;
             ps.VirtMem=0;
-            while (ss >> ps.Name >> ps.cpu >> ps.DataMem >> n){
+            while (ss >> ps.Name >> ps.cpu >> dm >> n){
+                ps.DataMem = (long) dm;
                 if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
                 if (this->IMvar.ProcessNames.size()>0) {
                     if (this->IMvar.ProcessNames[0] == "*") {
