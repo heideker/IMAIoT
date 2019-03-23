@@ -227,7 +227,7 @@ void MonData::Refresh(){
             while (ss >> ps.Name >> ps.cpu >> ps.DataMem >> n){
                 if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
                 if (this->IMvar.ProcessNames.size()>0) {
-                    if (this->IMvar.ProcessNames[0] != "*") {
+                    if (this->IMvar.ProcessNames[0] == "*") {
                         this->Dockers.push_back(ps);
                     } else {
                         for (auto d: this->IMvar.DockerNames) {
