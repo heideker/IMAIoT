@@ -206,6 +206,8 @@ void MonData::Refresh(){
         std::stringstream ss(stringOut);
         while (ss >> ps.pid >> ps.cpu >> ps.DataMem >> ps.VirtMem){
             ps.Name = ReplaceForbidden(p);
+            ps.DataMem *= 1000;
+            ps.VirtMem *= 1000;
             if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
             this->Processes.push_back (ps);
         }
@@ -228,8 +230,8 @@ void MonData::Refresh(){
             while (ss >> ps.Name >> ps.cpu >> dm >> n){
                 ps.DataMem = (long) dm;
                 if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
-                if (this->IMvar.ProcessNames.size()>0) {
-                    if (this->IMvar.ProcessNames[0] == "*") {
+                if (this->IMvar.DockerNames.size()>0) {
+                    if (this->IMvar.DockerNames[0] == "*") {
                         this->Dockers.push_back(ps);
                     } else {
                         for (auto d: this->IMvar.DockerNames) {
