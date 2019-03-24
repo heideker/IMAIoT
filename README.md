@@ -200,3 +200,5 @@ Para utilizar a aplicação web exemplo, basta abrir o arquivo imaiotGui.html em
 * Projeto SWAMP
 
 O video com estas instruções está disponível em: https://youtu.be/0M_0YtABibc
+Para um conhecer um exeplor de aplicação em funcionamento, visite o site http://www.imaiot.org
+
