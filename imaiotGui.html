@@ -544,7 +544,7 @@
                     " (" + d.toDateString() + " " + d.toLocaleTimeString() + ")";
             Selector.$('devSTime').innerHTML = devices[id].SampplingTime.value.value + " seconds";
             Selector.$('devType').innerHTML = devices[id].MFType.value.value;
-            Selector.$('devCPU').innerHTML = devices[id].CPU.value.value + "%";
+            Selector.$('devCPU').innerHTML = devices[id].CPU.value.value + "% (" + devices[id].Architecture.value.value + ")";
             Selector.$('devTotMem').innerHTML = devices[id].MemorySize.value.value + " bytes";
             Selector.$('devAvaMem').innerHTML = devices[id].MemoryAvailable.value.value + " bytes";
 
@@ -690,23 +690,23 @@
                     <div class="divwhite" style="width:100%;   overflow:auto; max-height: 500px">
                         <span class="title">Device Stats</span> 
                         <br /> <br />
-                        <label style="width:110px" >Local Timestamp: </label><label id="devTimestamp" ></label>
+                        <label style="width:110px" ><b>Local Timestamp: </b></label><label id="devTimestamp" ></label>
                         <br />
-                        <label style="width:110px" >Samppling Time: </label><label id="devSTime" ></label>
+                        <label style="width:110px" ><b>Samppling Time:</b> </label><label id="devSTime" ></label>
                         <br />
-                        <label style="width:110px" >Device Type: </label><label id="devType" ></label>
+                        <label style="width:110px" ><b>Device Type:</b> </label><label id="devType" ></label>
                         <br />
-                        <label style="width:110px" >CPU: </label><label id="devCPU" ></label>
+                        <label style="width:110px" ><b>CPU: </b></label><label id="devCPU" ></label>
                         <br />
-                        <label style="width:110px" >Total Memory:</label><label id="devTotMem" ></label>
+                        <label style="width:110px" ><b>Total Memory:</b></label><label id="devTotMem" ></label>
                         <br />
-                        <label style="width:110px" >Memory Avaliable:</label><label id="devAvaMem" ></label>  
+                        <label style="width:110px" ><b>Memory Avaliable:</b></label><label id="devAvaMem" ></label>  
                         <br />
-                        <label>TCP Window: </label><label style="width:85px"  id="TCPMaxWindowSize" ></label><nb&sp></nb>
-                        <label>TCP Tx Queue: </label><label style="width:85px"  id="TCPtxQueue" ></label><nb&sp></nb>
-                        <label>TCP Rx Queue: </label><label style="width:85px"  id="TCPrxQueue" ></label><nb&sp></nb>
-                        <label>UDP Tx Queue: </label><label style="width:85px"  id="UDPtxQueue" ></label><nb&sp></nb>
-                        <label>UDP Rx Queue: </label><label style="width:85px"  id="UDPrxQueue" ></label>
+                        <label><b>TCP Window: </b></label><label style="width:85px"  id="TCPMaxWindowSize" ></label><nb&sp></nb>
+                        <label><b>Tx Queue: </b></label><label style="width:85px"  id="TCPtxQueue" ></label><nb&sp></nb>
+                        <label><b>TCP Rx Queue: </b></label><label style="width:85px"  id="TCPrxQueue" ></label><nb&sp></nb>
+                        <label><b>UDP Tx Queue: </b></label><label style="width:85px"  id="UDPtxQueue" ></label><nb&sp></nb>
+                        <label><b>UDP Rx Queue: </b></label><label style="width:85px"  id="UDPrxQueue" ></label>
                     </div>
                 </div>
 
