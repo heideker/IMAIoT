@@ -72,10 +72,6 @@ MonData MFstats;
 int main(int argc, char *argv[]) {
     if (!readSetup(MFstats.IMvar)) return -1;
     //MFstats.setVar(MFstats.IMvar);
-    if (MFstats.IMvar.OrionMode==1) {
-        if (!ckEntity()) 
-            if (createEntity()) return -1;
-    }
     std::thread refresh (thrSampling);
     std::thread tOrion (thrOrionPublisher);
     std::thread tLog (thrLog);
@@ -150,16 +146,37 @@ void thrLog(){
 
 void thrOrionPublisher(){
     if (MFstats.IMvar.OrionMode!=1) return;
+    bool connected = false;
     while (true) {
-        std::time_t tsIni = std::time(0);
-        if (MFstats.IMvar.debugMode) cout << "Updating Orion Context-broker..." << endl;
-        updateEntity();
-        int taskTime = (int) (std::time(0) - tsIni);
-        int sleepTime = MFstats.IMvar.OrionPublisherTime - taskTime;
-        if (taskTime <= MFstats.IMvar.OrionPublisherTime) 
-            sleep(sleepTime);
+        if (!connected) {
+            while (!ckEntity()) {
+                if (MFstats.IMvar.debugMode) cout << "Can't find entity..." << endl;
+                if (!createEntity()) {
+                    if (MFstats.IMvar.debugMode) cout << "Waiting for three seconds and I'll try to connect again..." << endl;
+                    sleep(3); //if can't create entity, wait 3 seconds and try again...
+                } else {
+                    if (MFstats.IMvar.debugMode) cout << "Entity created..." << endl;
+                    break;
+                }
+            }
+            connected = true;
+        }
+        while (connected) {
+            std::time_t tsIni = std::time(0);
+            if (MFstats.IMvar.debugMode) cout << "Updating Orion Context-broker..." << endl;
+            if (!updateEntity()) {
+                connected = false;
+                if (MFstats.IMvar.debugMode) cout << "Lost connection with Orion..." << endl;
+                break;
+            }
+            int taskTime = (int) (std::time(0) - tsIni);
+            int sleepTime = MFstats.IMvar.OrionPublisherTime - taskTime;
+            if (taskTime <= MFstats.IMvar.OrionPublisherTime) 
+                sleep(sleepTime);
+        }
     }
 }
+
 
 std::string getJSONstats(){
     ostringstream json;
@@ -230,7 +247,7 @@ void logMFstatTXT(){
 }
 
 bool updateEntity(){
-    if (!ckEntity()) return false;
+    //if (!ckEntity()) return false;
     ostringstream json;
     SEM_WAIT
     json << "{\"MFType\":{\"type\":\"Text\", \"value\":\""
@@ -258,8 +275,10 @@ bool updateEntity(){
     chunk = curl_slist_append(chunk, "fiware-servicepath: /");
 
     string retStr = getRestFiware(url.str(), chunk, json.str());
-    if (retStr.find("{\"error\":",0)) 
+    if (retStr=="error") {
+        if (MFstats.IMvar.debugMode) cout << "ERROR: " << retStr << endl;
         return false;
+    }
     return true;
 }
 
@@ -291,12 +310,13 @@ bool createEntity(){
     chunk = curl_slist_append(chunk, "fiware-servicepath: /");
 
     string retStr = getRestFiware(url.str(), chunk, json.str());
-    if (retStr.find("{\"error\":",0)) 
+    if (retStr=="error") 
         return false;
     return true;
 }
 bool ckEntity(){
     ostringstream url;
+    if (MFstats.IMvar.debugMode) cout << "Looking for entity " << MFstats.IMvar.NodeUUID << url.str() << endl;
 
     url << MFstats.IMvar.OrionHost << ":" << MFstats.IMvar.OrionPort << "/v2/entities?type=IMAIoT&id=" << MFstats.IMvar.NodeUUID;
     if (MFstats.IMvar.debugMode) cout << "URL:\t" << url.str() << endl;
@@ -305,9 +325,14 @@ bool ckEntity(){
     chunk = curl_slist_append(chunk, "fiware-servicepath: /");
 
     string retStr = getRestFiware(url.str(), chunk, "");
-    if (retStr != "[]") 
-        return true;
-    return false;
+    if (MFstats.IMvar.debugMode) cout << "CURL return: " << retStr << endl;
+    if (retStr!="error") {
+        if (retStr != "[]") {
+            if (MFstats.IMvar.debugMode) cout << "Found!" << endl;
+            return true;
+        }
+    }
+    return false;  
 }
 
 size_t curlCallback(char *contents, size_t size, size_t nmemb, void *userp) {
@@ -371,9 +396,10 @@ string getRestFiware(string url, curl_slist *chunk, string data) {
 
         res = curl_easy_perform(curl);
         if(res != CURLE_OK) {
+            if (MFstats.IMvar.debugMode) cout << "CURL return: " << res << endl;
             curl_easy_cleanup(curl);
             curl_global_cleanup();
-            return "";
+            return "error";
         }
         curl_easy_cleanup(curl);
         curl_global_cleanup();
@@ -381,7 +407,7 @@ string getRestFiware(string url, curl_slist *chunk, string data) {
     }
     curl_easy_cleanup(curl);
     curl_global_cleanup();
-    return "";
+    return "error";
 }
 
 string getDockerProcesses(){

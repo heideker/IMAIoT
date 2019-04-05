@@ -200,16 +200,18 @@ void MonData::Refresh(){
     //reading processes stats...using ps shell command
     std::string stringOut;
     processData ps;
-    this->Processes.clear();
-    for (auto p: this->IMvar.ProcessNames) {
-        stringOut = run("ps  --no-headers -C " + p + " -o pid,%cpu,rss,vsz");
-        std::stringstream ss(stringOut);
-        while (ss >> ps.pid >> ps.cpu >> ps.DataMem >> ps.VirtMem){
-            ps.Name = ReplaceForbidden(p);
-            ps.DataMem *= 1000;
-            ps.VirtMem *= 1000;
-            if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
-            this->Processes.push_back (ps);
+    if (this->IMvar.ProcessNames.size()>1 || (this->IMvar.ProcessNames.size()==1 && this->IMvar.ProcessNames[0]!="") ) {
+        this->Processes.clear();
+        for (auto p: this->IMvar.ProcessNames) {
+            stringOut = run("ps  --no-headers -C " + p + " -o pid,%cpu,rss,vsz");
+            std::stringstream ss(stringOut);
+            while (ss >> ps.pid >> ps.cpu >> ps.DataMem >> ps.VirtMem){
+                ps.Name = ReplaceForbidden(p);
+                ps.DataMem *= 1000;
+                ps.VirtMem *= 1000;
+                if (this->IMvar.debugMode) cout << ps.Name << "\t" << ps.cpu << "\t" << ps.DataMem << endl;
+                this->Processes.push_back (ps);
+            }
         }
     }
     if (this->IMvar.DockerStat) {
